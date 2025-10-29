@@ -8,7 +8,7 @@ __IMPORTANT:__ This Plugin is designed to be used with Version 2 of the ODIN Voi
 
 ## Guide
 
-Following is a short guide outlining the integration of the Plugin into your Unreal Engine project. Alternatively you can look it up in our [Developer Documentation](https://docs.4players.io/voice/unreal/guides/odin-wwise).
+Following is a short guide outlining the integration of the Plugin into your Unreal Engine project. Alternatively you can look it up in our [Developer Documentation](https://docs.4players.io/voice/unreal/guides/odin-wwise/).
 
 ## Getting Started
 
@@ -20,7 +20,7 @@ To use the Component we recommend the following:
 
 To set up Wwise in your project, please follow Wwise's integration documentation. You can find the documentation [here](https://www.audiokinetic.com/library/edge/?source=UE4&id=index.html).
 
-To set up the ODIN Voice Chat Plugin, please take a look at our [Getting-Started guide](https://docs.4players.io/voice/unreal).
+To set up the ODIN Voice Chat Plugin, please take a look at our [Getting-Started guide](https://docs.4players.io/voice/unreal/).
 
 ## Plugin Structure
 
