@@ -4,7 +4,7 @@
 
 This is an optional Unreal Engine plugin that provides an Audio Input Component for integrating the new Version 2 of our [ODIN Voice Chat Plugin](https://odin.4players.io/voice-chat/) with the [Audiokinetic Wwise Sound Engine](https://www.audiokinetic.com/products/wwise/) in Unreal.
 
-__IMPORTANT:__ This Plugin is designed to be used with Version 2 of the ODIN Voice Chat Plugin and is not compatible with Version 1.x!
+__IMPORTANT:__ This Plugin is designed to be used with Version 2 of the ODIN Voice Chat Plugin and is not compatible with Version 1.x! A version compatible with Odin 1.x can be found here in this [branch](https://github.com/4Players/odin-unreal-wwise-adapter/tree/odin-1.x).
 
 ## Guide
 
