@@ -4,9 +4,7 @@
 
 #include "Modules/ModuleManager.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(OdinWwise, Log, All);
-
-class ODINWWISEADAPTER_API FOdinWwiseAdapterModule : public IModuleInterface
+class FOdinToWwiseAdapterModule : public IModuleInterface
 {
 public:
 
