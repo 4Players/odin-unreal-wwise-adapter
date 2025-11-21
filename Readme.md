@@ -52,12 +52,11 @@ Export using the Wwise Browser as described in the [Audiokinetic Guide for Unrea
 
 ### Integrating the Adapter in your Unreal Project
 
-To use the Wwise adapter, replace the `OdinSynthComponent` from your original Odin implementation with the `AkOdinInputComponent`.
+To use the Wwise adapter, replace the `OdinSynthComponent` from your original Odin implementation with the `AkOdinAudioInputComponent`.
 
-1. Assign the Odin Decoder using the `SetDecoder` function
-2. Set the associated Wwise audio input event by calling `PostAssociatedAudioInputEvent` on the `AkOdinInputComponent`
+1. Set the associated Wwise audio input event by calling `PostAssociatedAudioInputEvent` on the `AkOdinAudioInputComponent`
 
-Tip: You can add the `AkOdinInputComponent` directly on your Player Character as a component. This approach makes it easier to manage its properties and Wwise-specific settings.
+Tip: You can add the `AkOdinAudioInputComponent` directly on your Player Character as a component. This approach makes it easier to manage its properties and Wwise-specific settings.
 
 ## Conclusion
 
