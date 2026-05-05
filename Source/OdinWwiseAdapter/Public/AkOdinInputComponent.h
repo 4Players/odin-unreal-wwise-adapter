@@ -1,12 +1,13 @@
+/* Copyright (c) 2022-2024 4Players GmbH. All rights reserved. */
+
 #pragma once
 
 #include "CoreMinimal.h"
+#include "OdinAudio/OdinSoundGenerator.h"
 #include "AkAudioInputComponent.h"
 #include "AkOdinInputComponent.generated.h"
 
 class UOdinDecoder;
-class OdinSoundGenerator;
-class UOdinPlaybackMedia;
 
 /**
  * The UOdinAkInputComponent is designed for handling audio playback using the Wwise Audio Engine. Before calling
@@ -14,25 +15,27 @@ class UOdinPlaybackMedia;
  * `UOdinAkInputComponent::AssignDecoder`. Otherwise it behaves as any other AkAudioInputComponent would.
  */
 UCLASS(BlueprintType, Blueprintable, meta = (BlueprintSpawnableComponent))
-class ODINWWISEADAPTER_API UAkOdinInputComponent : public UAkAudioInputComponent
+class UAkOdinInputComponent : public UAkAudioInputComponent
 {
 	GENERATED_BODY()
 
 public:
-	UAkOdinInputComponent(const class FObjectInitializer& ObjectInitializer);
-
 	/**
 	 * Assigns a decoder to the input component, initializes the necessary sound generator, and configures internal properties.
 	 *
-	 * This method sets the provided UOdinDecoder as the decoder for this component. It initializes an OdinSoundGenerator,
-	 * ties it to the decoder for audio sample generation, and applies the decoder's sample rate and channel configuration
-	 * to the component.
+	 * This method sets the provided UOdinDecoder as the decoder for this component. It initializes an OdinSoundGenerator and
+	 * ties it to the decoder for audio sample generation.
 	 *
-	 * @param InDecoder A reference to the decoder to be assigned to the component. If the provided decoder is null, the method logs an error and exits without performing any operations.
+	 * @param Decoder A reference to the decoder to be assigned to the component. If the provided decoder is null, the method logs an error and exits without performing any operations.
 	 */
-	UFUNCTION(BlueprintCallable, Category = "Odin|Sound")
-	void SetDecoder(UPARAM(ref)
-		UOdinDecoder*& InDecoder);
+	UFUNCTION(BlueprintCallable, Category = "Odin|Sound", meta=(Keywords="Connect,Decoder"))
+	void AssignOdinDecoder(UOdinDecoder* Decoder);
+
+	/**
+	 * Unassigns a decoder from the input component and destroys the connected sound generator. After calling this, the Input Component will generate silence and can be reused by reassigning it to another Decoder. 
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Odin|Sound", meta=(Keywords="Disconnect,Clear"))
+	void UnassignOdinDecoder();
 
 	/**
 	 * Sets up the Wwise Audio configuration for this component. Requires a connected Odin Decoder to be able to
@@ -51,44 +54,62 @@ public:
 	 */
 	virtual bool FillSamplesBuffer(uint32 NumChannels, uint32 NumSamples, float** BufferToFill) override;
 
+	/**
+	 * Retrieves the muted state of the Odin audio input.
+	 *
+	 * @return True if the audio is currently muted; otherwise, false.
+	 */
+	UFUNCTION(BlueprintPure, Category="Odin|Sound")
+	virtual bool GetIsMuted() const;
+	/**
+	 * Sets the muted state for Odin audio input.
+	 *
+	 * @note This can be used to virtualize a voice in wwise. The requirement for this is to set a valid reference for
+	 * the VoiceActivityRtpc property and set the rtpc up in a way, that it affects the Voice Volume of the Audio Input
+	 * object in Wwise. Take a look at the guide for more information on the general setup.
+	 *
+	 * @param bNewIsMuted Specifies whether to mute (true) or unmute (false) the audio.
+	 */
+	UFUNCTION(BlueprintCallable, Category="Odin|Sound")
+	virtual void SetIsMuted(bool bNewIsMuted);
+
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType,
+	                           FActorComponentTickFunction* ThisTickFunction) override;
+
 protected:
 	/**
 	 * Used for processing audio input data  within the Odin audio system. Stores the decoder instance
 	 * assigned to the component, which is responsible for retrieving sound data from ODIN. The decoder’s
 	 * specific configuration settings (such as sample rate and channel count) determine how the audio data is
 	 * processed and managed.
-	 * 
-	 * Access to this variable may be locked to ensure synchronization during decoder assignment or modification operations.
 	 */
 	UPROPERTY(BlueprintReadOnly, Category = "Odin|Sound")
-	UOdinDecoder* Decoder = nullptr;
-
-
+	UOdinDecoder* PlaybackDecoder;
 	/**
-	 * OdinSoundGenerator instance, used to generate Odin-based audio samples.
+	 * Buffer used to store audio samples temporarily during audio processing.
 	 */
-	TSharedPtr<OdinSoundGenerator, ESPMode::ThreadSafe> SoundGenerator;
+	UPROPERTY()
+	TArray<float> Buffer;
 	/**
-	 * Used to synchronize access from multiple threads to data within the
-	 * UOdinAkInputComponent class. 
+	 * A reference to a Wwise RTPC object that manages the voice activity state in an Odin audio session.
 	 */
-	FCriticalSection DataAccessCS;
-
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Odin|Sound")
+	UAkRtpc* VoiceActivityRtpc;
 	/**
 	 * Audio Sample Rate. Is set to the connected Decoders sample rate on assignment.
 	 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Odin|Sound")
 	int32 SampleRate = 48000;
 	/**
 	 * Number of Audio Channels. Is set to the connected Decoders number of audio channels on assignment.
 	 */
-	int32 NumChannels = 1;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Odin|Sound")
+	bool bIsStereo = false;
+
 	/**
-	 * Boolean flag indicating whether a valid decoder is available.
-	 * Used to ensure that operations relying on a decoder are safe to be used.
+	 * OdinSoundGenerator instance, used to generate Odin-based audio samples.
 	 */
-	bool bHasValidDecoder = false;
-	/**
-	 * Buffer used to store audio samples temporarily during audio processing.
-	 */
-	TArray<float> Buffer;
+	TUniquePtr<FOdinSoundGenerator> SoundGenerator;
+
+	FThreadSafeBool bIsMuted = false;
 };

@@ -54,8 +54,9 @@ Export using the Wwise Browser as described in the [Audiokinetic Guide for Unrea
 
 To use the Wwise adapter, replace the `OdinSynthComponent` from your original Odin implementation with the `AkOdinInputComponent`.
 
-1. Assign the Odin Decoder using the `SetDecoder` function
-2. Set the associated Wwise audio input event by calling `PostAssociatedAudioInputEvent` on the `AkOdinInputComponent`
+1. Set the `Ak Audio Event` on the component to the `Play_voice` event created in Wwise.
+2. Assign the Odin Decoder using the `AssignOdinDecoder` function
+3. Set the associated Wwise audio input event by calling `PostAssociatedAudioInputEvent` on the `AkOdinInputComponent`
 
 Tip: You can add the `AkOdinInputComponent` directly on your Player Character as a component. This approach makes it easier to manage its properties and Wwise-specific settings.
 
