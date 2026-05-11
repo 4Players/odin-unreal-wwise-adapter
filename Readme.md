@@ -4,11 +4,11 @@
 
 This is an optional Unreal Engine plugin that provides an Audio Input Component for integrating the new Version 2 of our [ODIN Voice Chat Plugin](https://odin.4players.io/voice-chat/) with the [Audiokinetic Wwise Sound Engine](https://www.audiokinetic.com/products/wwise/) in Unreal.
 
-__IMPORTANT:__ This Plugin is designed to be used with Version 2 of the ODIN Voice Chat Plugin and is not compatible with Version 1.x! A version compatible with Odin 1.x can be found here in this [branch](https://github.com/4Players/odin-unreal-wwise-adapter/tree/odin-1.x).
+__IMPORTANT:__ This Plugin is designed to be used with Version 2 of the ODIN Voice Chat Plugin and is not compatible with Version 1.x! A version compatible with Odin 1.x can be found in this [repository](https://github.com/4Players/odin-unreal-wwise-adapter-1.x).
 
 ## Guide
 
-Following is a short guide outlining the integration of the Plugin into your Unreal Engine project. Alternatively you can look it up in our [Developer Documentation](https://docs.4players.io/voice/unreal/guides/odin-wwise/).
+Following is a short guide outlining the integration of the Plugin into your Unreal Engine project. Alternatively you can look it up in our [Developer Documentation](https://docs.4players.io/voice/unreal/next/guides/odin-wwise/).
 
 ## Getting Started
 
@@ -41,9 +41,9 @@ The `UAkOdinInputComponent` requires a Wwise Event to playback the Odin Audio Da
 
 To provide Unreal with the correct Wwise Event you need to add an Audio Input Plugin Source to your Soundbank. An example of this can be found in the [sample project](https://github.com/4Players/odin-unreal-wwise). To achieve this, you can follow these steps:
 
-- In the `Audio` tab of the Project Explorer right-click on the wanted work unit of the `Actor-Mixer-Hierarchy` and add a `New Child->Audio Input`.
+- In the `Audio` tab of the Wwise Project Explorer right-click on the wanted work unit of the `Containers` and add a `New Child->Audio Input`.
 - Make adjustments to it like needed in your project.
-- Make sure to go to the `Conversion` tab in the Contents Editor and set the Conversion to `Factory Conversion Settings->PCM->PCM as Input` by clicking on the `>>` button.
+- Make sure to go to the `Conversion` tab in the Contents Editor and set the Conversion to `Factory Conversion Settings->PCM->PCM as Input`.
 - Right-click the newly created source and add a `New Event->Play` to it.
 - If you have no Soundbank yet, create one.
 - Lastly you need to add that event to the Soundbank by dragging it from the `Events` tab in the Project Explorer to the Soundbank's Content Editor.
@@ -52,7 +52,7 @@ Export using the Wwise Browser as described in the [Audiokinetic Guide for Unrea
 
 ### Integrating the Adapter in your Unreal Project
 
-To use the Wwise adapter, replace the `OdinSynthComponent` from your original Odin implementation with the `AkOdinInputComponent`.
+To use the Wwise adapter, replace the `UOdinSynthComponent` from your original Odin implementation with the `UAkOdinInputComponent`.
 
 1. Set the `Ak Audio Event` on the component to the `Play_voice` event created in Wwise.
 2. Assign the Odin Decoder using the `AssignOdinDecoder` function
