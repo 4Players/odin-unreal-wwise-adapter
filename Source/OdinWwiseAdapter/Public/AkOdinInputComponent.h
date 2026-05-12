@@ -98,12 +98,12 @@ protected:
 	/**
 	 * Audio Sample Rate. Is set to the connected Decoders sample rate on assignment.
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Odin|Sound")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Odin|Sound")
 	int32 SampleRate = 48000;
 	/**
 	 * Number of Audio Channels. Is set to the connected Decoders number of audio channels on assignment.
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Odin|Sound")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Odin|Sound")
 	bool bIsStereo = false;
 
 	/**
