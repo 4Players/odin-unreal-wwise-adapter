@@ -2,13 +2,13 @@
 
 ![Wwise and ODIN](https://docs.4players.io/assets/images/wwise_with_odin_header-bb97f77fa2adf0aa23dcc9129f61c216.jpg)
 
-This is an optional Unreal Engine plugin that provides an Audio Input Component for integrating the new Version 2 of our [ODIN Voice Chat Plugin](https://odin.4players.io/voice-chat/) with the [Audiokinetic Wwise Sound Engine](https://www.audiokinetic.com/products/wwise/) in Unreal.
+This is an optional Unreal Engine plugin that provides an Audio Input Component for integrating our [ODIN Voice Chat Plugin](https://odin.4players.io/voice-chat/) with the [Audiokinetic Wwise Sound Engine](https://www.audiokinetic.com/products/wwise/) in Unreal.
 
 __IMPORTANT:__ This Plugin is designed to be used with Version 1.x of the ODIN Voice Chat Plugin and is not compatible with Version 2.x!
 
 ## Guide
 
-Following is a short guide outlining the integration of the Plugin into your Unreal Engine project. Alternatively you can look it up in our [Developer Documentation](https://docs.4players.io/voice/unreal/guides/odin-wwise/).
+Following is a short guide outlining the integration of the Plugin into your Unreal Engine project. Alternatively you can look up how to integrate Odin and Wwise manually in our [Developer Documentation](https://docs.4players.io/voice/unreal/guides/odin-wwise/).
 
 ## Getting Started
 
@@ -20,11 +20,11 @@ To use the Component we recommend the following:
 
 To set up Wwise in your project, please follow Wwise's integration documentation. You can find the documentation [here](https://www.audiokinetic.com/library/edge/?source=UE4&id=index.html).
 
-To set up the ODIN Voice Chat Plugin, please take a look at our [Getting-Started guide](https://docs.4players.io/voice/unreal/).
+To set up the ODIN Voice Chat Plugin, please take a look at our [Getting-Started guide](https://docs.4players.io/voice/unreal/). A sample project can be found in the corresponding [branch of our minimal samples](https://github.com/4Players/odin-unreal-minimal-samples/tree/wwise-adapter-sample).
 
 ## Plugin Structure
 
-The plugin consists primarily of the `UAkOdinInputComponent`, which serves as a substitute for the [UOdinSynthComponent](https://docs.4players.io/voice/unreal/blueprint-reference/odin-synth-component/). The component uses the Odin Decoder to generate Audio and forward it to the Wwise Audio Engine instead of to the Unreal Audio Engine.
+The plugin consists primarily of the `UAkOdinInputComponent`, which serves as a substitute for the [UOdinSynthComponent](https://docs.4players.io/voice/unreal/blueprint-reference/odin-synth-component/). The component uses the Odin SDK to generate Audio and forward it to the Wwise Audio Engine instead of to the Unreal Audio Engine.
 
 ## Usage
 
@@ -41,9 +41,9 @@ The `UAkOdinInputComponent` requires a Wwise Event to playback the Odin Audio Da
 
 To provide Unreal with the correct Wwise Event you need to add an Audio Input Plugin Source to your Soundbank. An example of this can be found in the [sample project](https://github.com/4Players/odin-unreal-wwise). To achieve this, you can follow these steps:
 
-- In the `Audio` tab of the Project Explorer right-click on the wanted work unit of the `Actor-Mixer-Hierarchy` and add a `New Child->Audio Input`.
+- In the `Audio` tab of the Project Explorer right-click on the wanted work unit of the `Containers` and add a `New Child->Audio Input`.
 - Make adjustments to it like needed in your project.
-- Make sure to go to the `Conversion` tab in the Contents Editor and set the Conversion to `Factory Conversion Settings->PCM->PCM as Input` by clicking on the `>>` button.
+- Make sure to go to the `Conversion` tab in the Contents Editor and set the Conversion to `Factory Conversion Settings->PCM->PCM as Input`.
 - Right-click the newly created source and add a `New Event->Play` to it.
 - If you have no Soundbank yet, create one.
 - Lastly you need to add that event to the Soundbank by dragging it from the `Events` tab in the Project Explorer to the Soundbank's Content Editor.
@@ -54,7 +54,7 @@ Export using the Wwise Browser as described in the [Audiokinetic Guide for Unrea
 
 To use the Wwise adapter, replace the `OdinSynthComponent` from your original Odin implementation with the `AkOdinAudioInputComponent`.
 
-1. Set the associated Wwise audio input event by calling `PostAssociatedAudioInputEvent` on the `AkOdinAudioInputComponent`
+Set the associated Wwise audio input event by calling `PostAssociatedAudioInputEvent` on the `AkOdinAudioInputComponent`
 
 Tip: You can add the `AkOdinAudioInputComponent` directly on your Player Character as a component. This approach makes it easier to manage its properties and Wwise-specific settings.
 
