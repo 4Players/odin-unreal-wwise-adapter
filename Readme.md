@@ -4,7 +4,7 @@
 
 This is an optional Unreal Engine plugin that provides an Audio Input Component for integrating the new Version 2 of our [ODIN Voice Chat Plugin](https://odin.4players.io/voice-chat/) with the [Audiokinetic Wwise Sound Engine](https://www.audiokinetic.com/products/wwise/) in Unreal.
 
-__IMPORTANT:__ This Plugin is designed to be used with Version 2 of the ODIN Voice Chat Plugin and is not compatible with Version 1.x! A version compatible with Odin 1.x can be found in this [repository](https://github.com/4Players/odin-unreal-wwise-adapter-1.x).
+__IMPORTANT:__ This Plugin requires ODIN Voice Chat Plugin version 20208.1.0 or newer (ODIN v2) and is not compatible with Version 1.x! A version compatible with Odin 1.x can be found in this [repository](https://github.com/4Players/odin-unreal-wwise-adapter-1.x).
 
 ## Guide
 
@@ -30,10 +30,12 @@ The plugin consists primarily of the `UAkOdinInputComponent`, which serves as a 
 
 ### Installation
 
-You can install the plugin similarly to the Odin plugin:
+This repository contains a source plugin. To install it:
+
 1. Download this repository
-2. Create a folder in your Unreal Project's `Plugins` directory and move the contents there
-3. Follow the steps below to use the Component in your project
+2. Place its contents in `YourProject/Plugins/OdinWwiseAdapter`, with `OdinWwiseAdapter.uplugin` directly inside that folder
+3. Enable the plugin and rebuild your project
+4. Follow the steps below to use the Component in your project
 
 ### Wwise Project Setup
 
@@ -54,11 +56,21 @@ Export using the Wwise Browser as described in the [Audiokinetic Guide for Unrea
 
 To use the Wwise adapter, replace the `UOdinSynthComponent` from your original Odin implementation with the `UAkOdinInputComponent`.
 
+Before assigning a decoder, configure the component's `SampleRate` and `bIsStereo` to match it (defaults: 48000 Hz, mono). Invalid decoders or mismatched settings are rejected and logged as errors.
+
 1. Set the `Ak Audio Event` on the component to the `Play_voice` event created in Wwise.
 2. Assign the Odin Decoder using the `AssignOdinDecoder` function
 3. Set the associated Wwise audio input event by calling `PostAssociatedAudioInputEvent` on the `AkOdinInputComponent`
 
 Tip: You can add the `AkOdinInputComponent` directly on your Player Character as a component. This approach makes it easier to manage its properties and Wwise-specific settings.
+
+Call `UnassignOdinDecoder` to disconnect the decoder. The next Wwise audio callback stops the event. To reuse the component, repeat the integration steps above with a matching decoder.
+
+### Muting and Virtual Voices
+
+To use `SetIsMuted`, assign a Wwise RTPC asset to `VoiceActivityRtpc` in the component's Blueprint defaults. Configure its Game Parameter with a range of 0 to 1 and a default of 1. Map it to the Audio Input's Voice Volume: 0 = -200 dB (muted), 1 = 0 dB (active). Set Virtual Voice Behavior to `Send to virtual voice`. Without an assigned RTPC, `SetIsMuted` only changes the component's mute flag.
+
+Keep component ticking enabled while muted or virtualized, including by distance. The adapter drains skipped audio to maintain decoder events and prevent audio latency from accumulating.
 
 ## Conclusion
 
